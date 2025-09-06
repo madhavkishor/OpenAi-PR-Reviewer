@@ -6,15 +6,11 @@ permissions:
 
 on:
   pull_request:
-  pull_request_review_comment:
-    types: [created]
+    types: [opened, synchronize, reopened]
 
 concurrency:
-  group:
-    ${{ github.repository }}-${{ github.event.number || github.head_ref ||
-    github.sha }}-${{ github.workflow }}-${{ github.event_name ==
-    'pull_request_review_comment' && 'pr_comment' || 'pr' }}
-  cancel-in-progress: ${{ github.event_name != 'pull_request_review_comment' }}
+  group: ${{ github.repository }}-${{ github.event.number || github.head_ref || github.sha }}-${{ github.workflow }}
+  cancel-in-progress: true
 
 jobs:
   review:
@@ -22,10 +18,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          repository: ${{github.event.pull_request.head.repo.full_name}}
-          ref: ${{github.event.pull_request.head.ref}}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
           submodules: false
-      - uses: ./
+
+      # Replace ./ with the actual action if needed (example below)
+      - uses: ./   # or openai-pr-reviewer/action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -33,5 +31,6 @@ jobs:
           debug: true
           review_comment_lgtm: false
           path_filters: |
+            **/*
             !dist/**
             !**/*.lock
