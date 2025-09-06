@@ -12,13 +12,15 @@ jobs:
   review:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout PR branch
+        uses: actions/checkout@v3
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
           submodules: false
 
-      - uses: ./
+      - name: Run OpenAI PR Reviewer
+        uses: ./
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -26,6 +28,6 @@ jobs:
           debug: true
           review_comment_lgtm: false
           path_filters: |
-            **/*
-            !dist/**
-            !**/*.lock
+            **/*            # include everything
+            !dist/**        # exclude compiled output
+            !**/*.lock      # exclude lock files
