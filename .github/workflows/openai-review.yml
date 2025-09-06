@@ -8,10 +8,6 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
-concurrency:
-  group: ${{ github.repository }}-${{ github.event.number || github.head_ref || github.sha }}-${{ github.workflow }}
-  cancel-in-progress: true
-
 jobs:
   review:
     runs-on: ubuntu-latest
@@ -22,8 +18,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
           submodules: false
 
-      # Replace ./ with the actual action if needed (example below)
-      - uses: ./   # or openai-pr-reviewer/action@v1
+      - uses: ./
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
