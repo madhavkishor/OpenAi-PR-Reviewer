@@ -23,7 +23,7 @@ NOTES:
   [more conservative data usage policy](https://openai.com/policies/api-data-usage-policies)
   compared to their ChatGPT offering.
 
-## Usage
+## Usages
 
 Add the below file to your repository at
 `.github/workflows/openai-pr-reviewer.yml`
